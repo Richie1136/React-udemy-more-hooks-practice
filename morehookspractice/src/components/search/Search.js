@@ -2,7 +2,7 @@ import React from 'react'
 import Card from '../card/Card'
 import './Search.css'
 
-const Search = React.memo() => {
+const Search = React.memo(props => {
   return (
     <section className='search'>
       <Card>
@@ -13,6 +13,6 @@ const Search = React.memo() => {
       </Card>
     </section>
   )
-}
+})
 
 export default Search

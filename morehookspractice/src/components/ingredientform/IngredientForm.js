@@ -2,7 +2,7 @@ import React from 'react'
 import Card from '../card/Card'
 import './IngredientForm.css'
 
-const IngredientForm = React.memo() => {
+const IngredientForm = React.memo(props => {
   const submitHandler = (event) => {
     event.preventDefault()
   }
@@ -25,6 +25,6 @@ const IngredientForm = React.memo() => {
       </Card>
     </section>
   )
-}
+})
 
 export default IngredientForm
