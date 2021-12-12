@@ -10,7 +10,8 @@ const Ingredients = () => {
 
   const handleAddIngredient = (ingredient) => {
     setUserIngredients(prevIngredients => [
-      [...prevIngredients, { id: Math.random().toString(), ...ingredient }]
+      ...prevIngredients,
+      { id: Math.random().toString(), ...ingredient }
     ])
   }
 
@@ -19,7 +20,7 @@ const Ingredients = () => {
       <IngredientForm onAddIngredient={handleAddIngredient} />
       <section>
         <Search />
-        <IngredientList ingredients={userIngredients} />
+        <IngredientList ingredients={userIngredients} onRemoveItem={() => { }} />
       </section>
     </div>
   )
