@@ -9,16 +9,20 @@ const Ingredients = () => {
   const [userIngredients, setUserIngredients] = useState([])
 
   const handleAddIngredient = (ingredient) => {
-    setUserIngredients(prevIngredients => [
-      ...prevIngredients,
-      { id: Math.random().toString(), ...ingredient }
-    ])
+    fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
+      method: 'POST',
+      body: JSON.stringify({ ingredient }),
+      headers: { 'Content-Type': 'application/json' }
+    }).then(response => {
+      setUserIngredients(prevIngredients => [
+        ...prevIngredients,
+        { id: Math.random().toString(), ...ingredient }
+      ])
+    })
   }
 
   const handleRemoveIngredient = (id) => {
-    setUserIngredients((prevIngredients) => {
-      return prevIngredients.filter((ingredient) => ingredient.id !== id)
-    })
+    setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
   }
 
   return (
