@@ -8,6 +8,12 @@ const Ingredients = () => {
 
   const [userIngredients, setUserIngredients] = useState([])
 
+  const handleAddIngredient = (ingredient) => {
+    setUserIngredients(prevIngredients => {
+      [...prevIngredients, { id: Math.random().toString(), ...ingredient }]
+    })
+  }
+
   return (
     <div className='App'>
       <IngredientForm />
