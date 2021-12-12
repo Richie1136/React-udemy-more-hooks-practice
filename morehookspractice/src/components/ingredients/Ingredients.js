@@ -9,14 +9,14 @@ const Ingredients = () => {
   const [userIngredients, setUserIngredients] = useState([])
 
   const handleAddIngredient = (ingredient) => {
-    setUserIngredients(prevIngredients => {
+    setUserIngredients(prevIngredients => [
       [...prevIngredients, { id: Math.random().toString(), ...ingredient }]
-    })
+    ])
   }
 
   return (
     <div className='App'>
-      <IngredientForm />
+      <IngredientForm onAddIngredient={handleAddIngredient} />
       <section>
         <Search />
         <IngredientList ingredients={userIngredients} />
