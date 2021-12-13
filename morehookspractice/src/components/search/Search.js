@@ -15,7 +15,7 @@ const Search = React.memo(props => {
   }
 
   useEffect(() => {
-    setTimeout(() => {
+    const timeout = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
         const query = enteredFilter.length === 0 ? '' : `?orderBy="title"&equalTo="${enteredFilter}"`
         fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json' + query)
@@ -33,6 +33,7 @@ const Search = React.memo(props => {
           });
       }
     }, 500);
+    return () => clearTimeout(timeout)
   }, [enteredFilter, onLoadIngredients, inputRef])
 
   return (
