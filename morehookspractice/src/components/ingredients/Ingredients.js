@@ -45,9 +45,13 @@ const Ingredients = () => {
     })
   }
 
+  const clearError = () => {
+    setIsError(null)
+  }
+
   return (
     <div className='App'>
-      {isError && <ErrorModal>{isError}</ErrorModal>}
+      {isError && <ErrorModal onClose={clearError}>{isError}</ErrorModal>}
       <IngredientForm onAddIngredient={handleAddIngredient} loading={isLoading} />
       <section>
         <Search onLoadIngredients={filteredIngredient} />
