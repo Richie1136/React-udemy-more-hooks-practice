@@ -4,6 +4,8 @@ import './Search.css'
 
 const Search = React.memo(props => {
 
+  const { onLoadIngredients } = props
+
   const [enteredFilter, setEnteredFilter] = useState('')
 
   const handleInput = (event) => {
@@ -22,9 +24,9 @@ const Search = React.memo(props => {
             amount: responseData[key].amount
           });
         }
-        props.onLoadIngredients(loadedIngredients)
+        onLoadIngredients(loadedIngredients)
       });
-  }, [enteredFilter, props])
+  }, [enteredFilter, onLoadIngredients])
 
   return (
     <section className='search'>
