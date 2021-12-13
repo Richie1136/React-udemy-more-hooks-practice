@@ -18,14 +18,16 @@ const ingredientReducer = (currentIngredients, action) => {
   }
 }
 
-const httpReducer = (httpState, action) => {
+const httpReducer = (currentHttpState, action) => {
   switch (action.type) {
     case 'SEND':
       return { loading: true, error: null }
     case 'RESPONSE':
-      return { ...httpState, loading: false }
+      return { ...currentHttpState, loading: false }
     case 'ERROR':
-      return { loading: false, error: action.error }
+      return { loading: false, error: action.errorMessage }
+    case 'CLEAR':
+      return { ...currentHttpState, error: null }
     default:
       throw new Error("Should not get here")
   }
@@ -34,12 +36,12 @@ const httpReducer = (httpState, action) => {
 const Ingredients = () => {
 
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
-  const [userIngredients, dispatch] = useReducer(httpReducer, { loading: false, error: null })
+  const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null })
 
 
   // const [userIngredients, setUserIngredients] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [isError, setIsError] = useState()
+  // const [isLoading, setIsLoading] = useState(false)
+  // const [isError, setIsError] = useState()
 
   const filteredIngredient = useCallback((filteredIngredients) => {
     // setUserIngredients(filteredIngredients)
@@ -47,13 +49,15 @@ const Ingredients = () => {
   }, [])
 
   const handleAddIngredient = (ingredient) => {
-    setIsLoading(true)
+    // setIsLoading(true)
+    dispatchHttp({ type: 'SEND' })
     fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
       method: 'POST',
       body: JSON.stringify(ingredient),
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {
-      setIsLoading(false)
+      // setIsLoading(false)
+      dispatchHttp({ type: 'RESPONSE' })
       return response.json()
     }).then(responseData => {
       // setUserIngredients(prevIngredients => [
@@ -66,28 +70,32 @@ const Ingredients = () => {
 
 
   const handleRemoveIngredient = (id) => {
-    setIsLoading(true)
+    // setIsLoading(true)
+    dispatchHttp({ type: 'SEND' })
     fetch(`https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients/${id}.json`, {
       method: 'DELETE',
     }).then(response => {
-      setIsLoading(false)
+      // setIsLoading(false)
+      dispatchHttp({ type: 'RESPONSE' })
       // setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
       dispatch({ type: 'DELETE', id })
 
     }).catch(error => {
-      setIsError(error.message)
-      setIsLoading(false)
+      // setIsError(error.message)
+      // setIsLoading(false)
+      dispatchHttp({ type: 'ERROR', errorMessage: error.message })
     })
   }
 
   const clearError = () => {
-    setIsError(null)
+    // setIsError(null)
+    dispatchHttp({ type: 'CLEAR' })
   }
 
   return (
     <div className='App'>
-      {isError && <ErrorModal onClose={clearError}>{isError}</ErrorModal>}
-      <IngredientForm onAddIngredient={handleAddIngredient} loading={isLoading} />
+      {httpState.error && <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>}
+      <IngredientForm onAddIngredient={handleAddIngredient} loading={httpState.loading} />
       <section>
         <Search onLoadIngredients={filteredIngredient} />
         <IngredientList ingredients={userIngredients} onRemoveItem={handleRemoveIngredient} />
