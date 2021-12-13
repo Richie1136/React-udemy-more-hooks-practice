@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react'
+import React, { useReducer, useState, useCallback } from 'react'
 import IngredientForm from '../ingredientform/IngredientForm'
 import Search from '../search/Search'
 import IngredientList from '../ingredientlist/IngredientList'
@@ -20,12 +20,15 @@ const ingredientReducer = (currentIngredients, action) => {
 
 const Ingredients = () => {
 
-  const [userIngredients, setUserIngredients] = useState([])
+  const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
+
+  // const [userIngredients, setUserIngredients] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [isError, setIsError] = useState()
 
   const filteredIngredient = useCallback((filteredIngredients) => {
-    setUserIngredients(filteredIngredients)
+    // setUserIngredients(filteredIngredients)
+    dispatch({ type: 'SET', ingredients: filteredIngredients })
   }, [])
 
   const handleAddIngredient = (ingredient) => {
@@ -38,10 +41,11 @@ const Ingredients = () => {
       setIsLoading(false)
       return response.json()
     }).then(responseData => {
-      setUserIngredients(prevIngredients => [
-        ...prevIngredients,
-        { id: responseData.name, ...ingredient }
-      ])
+      // setUserIngredients(prevIngredients => [
+      //   ...prevIngredients,
+      //   { id: responseData.name, ...ingredient }
+      // ])
+      dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
     })
   }
 
@@ -52,7 +56,9 @@ const Ingredients = () => {
       method: 'DELETE',
     }).then(response => {
       setIsLoading(false)
-      setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
+      // setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
+      dispatch({ type: 'DELETE', id })
+
     }).catch(error => {
       setIsError(error.message)
       setIsLoading(false)
