@@ -13,7 +13,8 @@ const Search = React.memo(props => {
   }
 
   useEffect(() => {
-    fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json')
+    const query = enteredFilter.length === 0 ? '' : `?orderBy="title"&equalTo="${enteredFilter}"`
+    fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json' + query)
       .then(response => response.json())
       .then(responseData => {
         const loadedIngredients = []
