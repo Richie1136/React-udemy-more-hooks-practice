@@ -1,9 +1,22 @@
-import React, { useState, useCallback } from 'react'
+import React, { useReducer, useCallback } from 'react'
 import IngredientForm from '../ingredientform/IngredientForm'
 import Search from '../search/Search'
 import IngredientList from '../ingredientlist/IngredientList'
 import ErrorModal from '../errormodal/ErrorModal'
 
+const ingredientReducer = (currentIngredients, action) => {
+  switch (action.type) {
+    case 'SET':
+      return action.ingredients
+    case 'ADD':
+      return [...currentIngredients, action.ingredient]
+    case 'DELETE':
+      return currentIngredients.filter((ingredient) => ingredient.id !== action.id)
+
+    default:
+      throw new Error("Should not get here")
+  }
+}
 
 const Ingredients = () => {
 
