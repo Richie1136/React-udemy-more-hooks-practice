@@ -24,6 +24,10 @@ const Ingredients = () => {
       });
   }, [])
 
+  const filteredIngredient = (filteredIngredients) => {
+    setUserIngredients(filteredIngredients)
+  }
+
   const handleAddIngredient = (ingredient) => {
     fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
       method: 'POST',
@@ -39,10 +43,6 @@ const Ingredients = () => {
     })
   }
 
-  useEffect(() => {
-    console.log('RENDERING INGREDIENTS', userIngredients);
-  }, [userIngredients]);
-
 
   const handleRemoveIngredient = (id) => {
     setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
@@ -52,7 +52,7 @@ const Ingredients = () => {
     <div className='App'>
       <IngredientForm onAddIngredient={handleAddIngredient} />
       <section>
-        <Search />
+        <Search onLoadIngredients={filteredIngredient} />
         <IngredientList ingredients={userIngredients} onRemoveItem={handleRemoveIngredient} />
       </section>
     </div>
