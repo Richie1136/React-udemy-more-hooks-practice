@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import IngredientForm from '../ingredientform/IngredientForm'
 import Search from '../search/Search'
 import IngredientList from '../ingredientlist/IngredientList'
@@ -24,9 +24,9 @@ const Ingredients = () => {
       });
   }, [])
 
-  const filteredIngredient = (filteredIngredients) => {
+  const filteredIngredient = useCallback((filteredIngredients) => {
     setUserIngredients(filteredIngredients)
-  }
+  }, [])
 
   const handleAddIngredient = (ingredient) => {
     fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
