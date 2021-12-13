@@ -42,6 +42,7 @@ const Ingredients = () => {
       setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
     }).catch(error => {
       setIsError(error.message)
+      setIsLoading(false)
     })
   }
 

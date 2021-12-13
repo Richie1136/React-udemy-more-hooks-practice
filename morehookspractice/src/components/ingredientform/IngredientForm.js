@@ -35,7 +35,7 @@ const IngredientForm = React.memo(props => {
           </div>
           <div className='ingredient-form__actions'>
             <button type='submit'>Add Ingredient</button>
-            {props.isLoading ? <LoadingIndicator /> : null}
+            {props.loading ? <LoadingIndicator /> : null}
           </div>
         </form>
       </Card>
