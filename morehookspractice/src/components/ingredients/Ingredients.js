@@ -48,7 +48,7 @@ const Ingredients = () => {
     dispatch({ type: 'SET', ingredients: filteredIngredients })
   }, [])
 
-  const handleAddIngredient = (ingredient) => {
+  const handleAddIngredient = useCallback((ingredient) => {
     // setIsLoading(true)
     dispatchHttp({ type: 'SEND' })
     fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
@@ -66,7 +66,7 @@ const Ingredients = () => {
       // ])
       dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
     })
-  }
+  }, [])
 
 
   const handleRemoveIngredient = (id) => {
