@@ -3,6 +3,7 @@ import IngredientForm from '../ingredientform/IngredientForm'
 import Search from '../search/Search'
 import IngredientList from '../ingredientlist/IngredientList'
 import ErrorModal from '../errormodal/ErrorModal'
+import useHttp from '../../hooks/http'
 
 const ingredientReducer = (currentIngredients, action) => {
   switch (action.type) {
@@ -21,6 +22,7 @@ const ingredientReducer = (currentIngredients, action) => {
 const Ingredients = () => {
 
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
+  const { loading, error, data, sendRequest } = useHttp()
 
 
   // const [userIngredients, setUserIngredients] = useState([])
@@ -34,40 +36,42 @@ const Ingredients = () => {
 
   const handleAddIngredient = useCallback((ingredient) => {
     // setIsLoading(true)
-    dispatchHttp({ type: 'SEND' })
-    fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
-      method: 'POST',
-      body: JSON.stringify(ingredient),
-      headers: { 'Content-Type': 'application/json' }
-    }).then(response => {
-      // setIsLoading(false)
-      dispatchHttp({ type: 'RESPONSE' })
-      return response.json()
-    }).then(responseData => {
-      // setUserIngredients(prevIngredients => [
-      //   ...prevIngredients,
-      //   { id: responseData.name, ...ingredient }
-      // ])
-      dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
-    })
+    // dispatchHttp({ type: 'SEND' })
+    // fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', {
+    //   method: 'POST',
+    //   body: JSON.stringify(ingredient),
+    //   headers: { 'Content-Type': 'application/json' }
+    // }).then(response => {
+    //   // setIsLoading(false)
+    //   dispatchHttp({ type: 'RESPONSE' })
+    //   return response.json()
+    // }).then(responseData => {
+    //   // setUserIngredients(prevIngredients => [
+    //   //   ...prevIngredients,
+    //   //   { id: responseData.name, ...ingredient }
+    //   // ])
+    //   dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
+    // })
   }, [])
 
 
   const handleRemoveIngredient = useCallback((id) => {
     // setIsLoading(true)
-    dispatchHttp({ type: 'SEND' })
-  }, [])
+    // dispatchHttp({ type: 'SEND' })
+
+    sendRequest(`https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients/${id}.json`, 'DELETE')
+  }, [sendRequest])
 
   const clearError = useCallback(() => {
     // setIsError(null)
-    dispatchHttp({ type: 'CLEAR' })
+    // dispatchHttp({ type: 'CLEAR' })
   }, [])
 
 
   return (
     <div className='App'>
-      {httpState.error && <ErrorModal onClose={clearError}>{httpState.error}</ErrorModal>}
-      <IngredientForm onAddIngredient={handleAddIngredient} loading={httpState.loading} />
+      {error && <ErrorModal onClose={clearError}>{error}</ErrorModal>}
+      <IngredientForm onAddIngredient={handleAddIngredient} loading={loading} />
       <section>
         <Search onLoadIngredients={filteredIngredient} />
         <IngredientList ingredients={userIngredients} onRemoveItem={handleRemoveIngredient} />

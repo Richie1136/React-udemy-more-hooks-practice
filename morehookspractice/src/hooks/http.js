@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useCallback } from 'react'
 
 const httpReducer = (currentHttpState, action) => {
   switch (action.type) {
@@ -17,7 +17,7 @@ const httpReducer = (currentHttpState, action) => {
 const useHttp = () => {
   const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null, data: null })
 
-  const sendRequest = (url, method, body) => {
+  const sendRequest = useCallback((url, method, body) => {
     dispatchHttp({ type: 'SEND' })
     fetch(url, {
       method,
@@ -37,12 +37,13 @@ const useHttp = () => {
         // setIsLoading(false)
         dispatchHttp({ type: 'ERROR', errorMessage: error.message })
       })
-  }
+  }, [])
 
   return {
-    isLoading: httpState.loading,
-    data: httpState.data
-    error: httpState.error
+    loading: httpState.loading,
+    data: httpState.data,
+    error: httpState.error,
+    sendRequest
 
   }
 }
