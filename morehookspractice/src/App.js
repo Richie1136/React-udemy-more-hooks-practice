@@ -8,13 +8,10 @@ function App() {
   const context = useContext(AuthContext)
   let content = <Auth />
 
-  if (AuthContext.isAuth) {
+  if (context.isAuth) {
     content = <Ingredients />
-  } else {
-    content = <Auth />
   }
   return content
-
 }
 
 export default App;
