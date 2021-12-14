@@ -76,6 +76,7 @@ const Ingredients = () => {
   const clearError = useCallback(() => {
     // setIsError(null)
     // dispatchHttp({ type: 'CLEAR' })
+    clear()
   }, [])
 
 

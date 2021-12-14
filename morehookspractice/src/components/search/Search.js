@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useRef } from 'react'
 import Card from '../card/Card'
 import './Search.css'
+import useHttp from '../../hooks/http'
 
 const Search = React.memo(({ onLoadIngredients }) => {
 
   const [enteredFilter, setEnteredFilter] = useState('')
 
   const inputRef = useRef()
+
+  const { loading, data, error, sendRequest, clear } = useHttp()
 
   const handleInput = (event) => {
     setEnteredFilter(event.target.value)
@@ -16,23 +19,30 @@ const Search = React.memo(({ onLoadIngredients }) => {
     const timeout = setTimeout(() => {
       if (enteredFilter === inputRef.current.value) {
         const query = enteredFilter.length === 0 ? '' : `?orderBy="title"&equalTo="${enteredFilter}"`
-        fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json' + query)
-          .then(response => response.json())
-          .then(responseData => {
-            const loadedIngredients = []
-            for (const key in responseData) {
-              loadedIngredients.push({
-                id: key,
-                title: responseData[key].title,
-                amount: responseData[key].amount
-              });
-            }
-            onLoadIngredients(loadedIngredients)
-          });
+        sendRequest('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json' + query, 'GET')
+        // fetch('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json' + query)
+        // .then(response => response.json())
+        // .then(responseData => {
+        // // });
       }
     }, 500);
     return () => clearTimeout(timeout)
   }, [enteredFilter, onLoadIngredients, inputRef])
+
+  useEffect(() => {
+    if (!loading && data && !error) {
+      const loadedIngredients = []
+      for (const key in data) {
+        loadedIngredients.push({
+          id: key,
+          title: data[key].title,
+          amount: data[key].amount
+        });
+      }
+      onLoadIngredients(loadedIngredients)
+
+    }
+  }, [data, loading, error, onLoadIngredients])
 
   return (
     <section className='search'>
