@@ -22,7 +22,7 @@ const ingredientReducer = (currentIngredients, action) => {
 const Ingredients = () => {
 
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
-  const { loading, error, data, sendRequest, id, identifier } = useHttp()
+  const { loading, error, data, sendRequest, id, identifier, clear } = useHttp()
 
 
   useEffect(() => {
