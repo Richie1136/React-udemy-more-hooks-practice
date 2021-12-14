@@ -1,7 +1,7 @@
 import React from 'react'
 import './IngredientList.css'
 
-const IngredientList = ({ ingredients, onRemoveItem }) => {
+const IngredientList = React.memo(({ ingredients, onRemoveItem }) => {
   return (
     <>
       <section className='ingredient-list'>
@@ -17,6 +17,6 @@ const IngredientList = ({ ingredients, onRemoveItem }) => {
       </section>
     </>
   )
-}
+})
 
 export default IngredientList

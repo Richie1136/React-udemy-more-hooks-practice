@@ -69,7 +69,7 @@ const Ingredients = () => {
   }, [])
 
 
-  const handleRemoveIngredient = (id) => {
+  const handleRemoveIngredient = useCallback((id) => {
     // setIsLoading(true)
     dispatchHttp({ type: 'SEND' })
     fetch(`https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients/${id}.json`, {
@@ -85,7 +85,7 @@ const Ingredients = () => {
       // setIsLoading(false)
       dispatchHttp({ type: 'ERROR', errorMessage: error.message })
     })
-  }
+  }, [])
 
   const clearError = () => {
     // setIsError(null)
