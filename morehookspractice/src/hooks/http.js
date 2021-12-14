@@ -3,9 +3,9 @@ import React, { useReducer } from 'react'
 const httpReducer = (currentHttpState, action) => {
   switch (action.type) {
     case 'SEND':
-      return { loading: true, error: null }
+      return { loading: true, error: null, data: null }
     case 'RESPONSE':
-      return { ...currentHttpState, loading: false }
+      return { ...currentHttpState, loading: false, data: action.data }
     case 'ERROR':
       return { loading: false, error: action.errorMessage }
     case 'CLEAR':
@@ -15,32 +15,36 @@ const httpReducer = (currentHttpState, action) => {
   }
 }
 const useHttp = () => {
-  const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null })
+  const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null, data: null })
 
   const sendRequest = (url, method, body) => {
+    dispatchHttp({ type: 'SEND' })
     fetch(url, {
       method,
-      body
+      body,
       headers: { 'Content-Type': 'application/json' }
     }).then(response => {
       // setIsLoading(false)
-      dispatchHttp({ type: 'RESPONSE' })
       return response.json()
-    }).then(responseData => {
-      // setUserIngredients(prevIngredients => [
-      //   ...prevIngredients,
-      //   { id: responseData.name, ...ingredient }
-      // ])
-      dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
+      // setUserIngredients((prevIngredients) => prevIngredients.filter((ingredient) => ingredient.id !== id))
+
     })
+      .then(data => {
+        dispatchHttp({ type: 'RESPONSE', data })
+      })
+      .catch(error => {
+        // setIsError(error.message)
+        // setIsLoading(false)
+        dispatchHttp({ type: 'ERROR', errorMessage: error.message })
+      })
   }
 
+  return {
+    isLoading: httpState.loading,
+    data: httpState.data
+    error: httpState.error
 
-  return (
-    <div>
-
-    </div>
-  )
+  }
 }
 
 export default useHttp
