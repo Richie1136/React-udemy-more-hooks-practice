@@ -87,10 +87,11 @@ const Ingredients = () => {
     })
   }, [])
 
-  const clearError = () => {
+  const clearError = useCallback(() => {
     // setIsError(null)
     dispatchHttp({ type: 'CLEAR' })
-  }
+  }, [])
+
 
   return (
     <div className='App'>
