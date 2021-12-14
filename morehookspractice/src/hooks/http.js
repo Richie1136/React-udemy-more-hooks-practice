@@ -3,9 +3,9 @@ import React, { useReducer, useCallback } from 'react'
 const httpReducer = (currentHttpState, action) => {
   switch (action.type) {
     case 'SEND':
-      return { loading: true, error: null, data: null }
+      return { loading: true, error: null, data: null, id: null, identifier: action.identifier }
     case 'RESPONSE':
-      return { ...currentHttpState, loading: false, data: action.data }
+      return { ...currentHttpState, loading: false, data: action.data, id: action.id }
     case 'ERROR':
       return { loading: false, error: action.errorMessage }
     case 'CLEAR':
@@ -15,10 +15,10 @@ const httpReducer = (currentHttpState, action) => {
   }
 }
 const useHttp = () => {
-  const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null, data: null })
+  const [httpState, dispatchHttp] = useReducer(httpReducer, { loading: false, error: null, data: null, id: null, identifier: null })
 
-  const sendRequest = useCallback((url, method, body) => {
-    dispatchHttp({ type: 'SEND' })
+  const sendRequest = useCallback((url, method, body, id, identifier) => {
+    dispatchHttp({ type: 'SEND', identifier })
     fetch(url, {
       method,
       body,
@@ -30,7 +30,7 @@ const useHttp = () => {
 
     })
       .then(data => {
-        dispatchHttp({ type: 'RESPONSE', data })
+        dispatchHttp({ type: 'RESPONSE', data, id })
       })
       .catch(error => {
         // setIsError(error.message)
@@ -43,7 +43,9 @@ const useHttp = () => {
     loading: httpState.loading,
     data: httpState.data,
     error: httpState.error,
-    sendRequest
+    sendRequest,
+    id: httpState.id,
+    identifier: httpState.identifier
 
   }
 }

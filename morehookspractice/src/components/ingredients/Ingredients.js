@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useCallback } from 'react'
+import React, { useReducer, useState, useEffect, useCallback } from 'react'
 import IngredientForm from '../ingredientform/IngredientForm'
 import Search from '../search/Search'
 import IngredientList from '../ingredientlist/IngredientList'
@@ -22,7 +22,17 @@ const ingredientReducer = (currentIngredients, action) => {
 const Ingredients = () => {
 
   const [userIngredients, dispatch] = useReducer(ingredientReducer, [])
-  const { loading, error, data, sendRequest } = useHttp()
+  const { loading, error, data, sendRequest, id, identifier } = useHttp()
+
+
+  useEffect(() => {
+    if (!loading && !error && identifier === "REMOVE_INGREDIENT") {
+      dispatch({ type: 'DELETE', id })
+    } else if (!loading && !error && identifier === 'ADD_INGREDIENT') {
+      dispatch({ type: 'ADD', ingredient: { id: data.name, ...id } })
+
+    }
+  }, [data, id, identifier, loading, error])
 
 
   // const [userIngredients, setUserIngredients] = useState([])
@@ -52,14 +62,15 @@ const Ingredients = () => {
     //   // ])
     //   dispatch({ type: 'ADD', ingredient: { id: responseData.name, ...ingredient } })
     // })
-  }, [])
+    sendRequest('https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients.json', 'POST', JSON.stringify(ingredient), ingredient, "ADD_INGREDIENT")
+  }, [sendRequest])
 
 
   const handleRemoveIngredient = useCallback((id) => {
     // setIsLoading(true)
     // dispatchHttp({ type: 'SEND' })
 
-    sendRequest(`https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients/${id}.json`, 'DELETE')
+    sendRequest(`https://react-hooks-practice-6b094-default-rtdb.firebaseio.com/ingredients/${id}.json`, 'DELETE', null, id, "REMOVE_INGREDIENT")
   }, [sendRequest])
 
   const clearError = useCallback(() => {
