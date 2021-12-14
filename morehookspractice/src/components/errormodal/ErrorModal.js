@@ -1,7 +1,7 @@
 import React from 'react'
 import './ErrorModal.css'
 
-const ErrorModal = React.memo = ({ onClose, children }) => {
+const ErrorModal = React.memo(({ onClose, children }) => {
   return (
     <>
       <div className='backdrop' onClick={onClose} />
@@ -16,6 +16,6 @@ const ErrorModal = React.memo = ({ onClose, children }) => {
       </div>
     </>
   )
-}
+})
 
 export default ErrorModal
