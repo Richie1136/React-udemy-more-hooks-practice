@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import Card from '../card/Card'
 import './Search.css'
 import useHttp from '../../hooks/http'
+import ErrorModal from '../errormodal/ErrorModal'
 
 const Search = React.memo(({ onLoadIngredients }) => {
 
@@ -27,7 +28,7 @@ const Search = React.memo(({ onLoadIngredients }) => {
       }
     }, 500);
     return () => clearTimeout(timeout)
-  }, [enteredFilter, onLoadIngredients, inputRef])
+  }, [enteredFilter, inputRef, sendRequest])
 
   useEffect(() => {
     if (!loading && data && !error) {
@@ -44,11 +45,15 @@ const Search = React.memo(({ onLoadIngredients }) => {
     }
   }, [data, loading, error, onLoadIngredients])
 
+
+
   return (
     <section className='search'>
       <Card>
+        {error && <ErrorModal onClose={clear}>{error}</ErrorModal>}
         <div className='search-input'>
           <label>Filter by Title</label>
+          {loading && <span>Loading...</span>}
           <input ref={inputRef} type='text' value={enteredFilter} onChange={handleInput} />
         </div>
       </Card>
